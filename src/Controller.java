@@ -1,4 +1,6 @@
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 public class Controller {
 
@@ -8,16 +10,14 @@ public class Controller {
 
     public float ComputeBinary(String signBit, String second, String third, String fourth, String fifth, String sixth, String seventh, String eighth, String ninth) {
         String wholeString = signBit + second + third + fourth + fifth + sixth + seventh + eighth + ninth;
-        int intBits = Integer.parseInt(wholeString, 2);
-        float floatOutput = Float.intBitsToFloat(intBits);
-
+        Long intBits = Long.parseLong(wholeString, 2);
+        float floatOutput = Float.intBitsToFloat(intBits.intValue());
         return floatOutput;
     }
 
     public float ComputeHex(String hex) {
         Long intBits = Long.parseLong(hex, 16);
         float floatOutput = Float.intBitsToFloat(intBits.intValue());
-
         return floatOutput;
     }
 
