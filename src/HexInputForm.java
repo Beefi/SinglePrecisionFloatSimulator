@@ -1,3 +1,5 @@
+import org.firebirdsql.decimal.Decimal32;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,8 +29,8 @@ public class HexInputForm extends JFrame {
                 String hexInput = hexTextField.getText();
                 String fixedPoint = fixedSpinner.getValue().toString();
 
-                float floatOutput = controller.ComputeHex(hexInput);
-                String strFormat = String.format("%."+fixedPoint+"f", floatOutput);
+                Decimal32 Output = controller.ComputeHex(hexInput);
+                String strFormat = String.format("%."+fixedPoint+"f", Output);
                 outputField.setText(strFormat);
 
                 if (printBox.isSelected()) {
@@ -43,12 +45,12 @@ public class HexInputForm extends JFrame {
                 Controller controller = new Controller();
 
                 String hexInput = hexTextField.getText();
-                float floatOutput = controller.ComputeHex(hexInput);
+                Decimal32 Output = controller.ComputeHex(hexInput);
 
-                outputField.setText(String.valueOf(floatOutput));
+                outputField.setText(String.valueOf(Output));
 
                 if (printBox.isSelected()) {
-                    StringBuilder sb = new StringBuilder("0x" + hexInput + " : " + floatOutput);
+                    StringBuilder sb = new StringBuilder("0x" + hexInput + " : " + Output);
                     controller.PrintToText(sb);
                 }
             }

@@ -1,6 +1,9 @@
+import org.firebirdsql.decimal.Decimal32;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 
 public class BinaryInputForm extends JFrame {
 
@@ -57,15 +60,27 @@ public class BinaryInputForm extends JFrame {
                 String ninthPart = ninthPartField.getText();
                 String fixedPoint = fixedSpinner.getValue().toString();
 
-                float floatOutput = controller.ComputeBinary(signBit, secondPart, thirdPart, fourthPart, fifthPart, sixthPart, seventhPart, eighthPart, ninthPart);
+                Decimal32 Output = controller.ComputeBinary(signBit, secondPart, thirdPart, fourthPart, fifthPart, sixthPart, seventhPart, eighthPart, ninthPart);
+                BigDecimal bd = Output.toBigDecimal();
 
-                String strFormat = String.format("%."+fixedPoint+"f", floatOutput);
-                outputField.setText(strFormat);
+                String strFormat = String.format("%."+fixedPoint+"f", bd);;
+                String finalFormat = null;
+
+                switch (signBit) {
+                    case "0":
+                        finalFormat = strFormat;
+                        break;
+                    case "1":
+                        finalFormat = "-" + strFormat;
+                        break;
+                }
+
+                outputField.setText(finalFormat);
 
                 String wholeString = signBit + secondPart + thirdPart + fourthPart + fifthPart + sixthPart + seventhPart + eighthPart + ninthPart;
 
                 if (printBox.isSelected()) {
-                    StringBuilder sb = new StringBuilder(wholeString + " : " + strFormat);
+                    StringBuilder sb = new StringBuilder(wholeString + " : " + finalFormat);
                     controller.PrintToText(sb);
                 }
             }
@@ -84,14 +99,25 @@ public class BinaryInputForm extends JFrame {
                 String eighthPart = eighthPartField.getText();
                 String ninthPart = ninthPartField.getText();
 
-                float floatOutput = controller.ComputeBinary(signBit, secondPart, thirdPart, fourthPart, fifthPart, sixthPart, seventhPart, eighthPart, ninthPart);
+                Decimal32 Output = controller.ComputeBinary(signBit, secondPart, thirdPart, fourthPart, fifthPart, sixthPart, seventhPart, eighthPart, ninthPart);
 
-                outputField.setText(String.valueOf(floatOutput));
+                String finalFormat = null;
+
+                switch (signBit) {
+                    case "0":
+                        finalFormat = Output.toString();
+                        break;
+                    case "1":
+                        finalFormat = "-" + Output.toString();
+                        break;
+                }
+
+                outputField.setText(finalFormat);
 
                 String wholeString = signBit + secondPart + thirdPart + fourthPart + fifthPart + sixthPart + seventhPart + eighthPart + ninthPart;
 
                 if (printBox.isSelected()) {
-                    StringBuilder sb = new StringBuilder(wholeString + " : "  + floatOutput);
+                    StringBuilder sb = new StringBuilder(wholeString + " : "  + finalFormat);
                     controller.PrintToText(sb);
                 }
             }
