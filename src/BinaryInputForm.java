@@ -60,28 +60,32 @@ public class BinaryInputForm extends JFrame {
                 String ninthPart = ninthPartField.getText();
                 String fixedPoint = fixedSpinner.getValue().toString();
 
-                Decimal32 Output = controller.ComputeBinary(signBit, secondPart, thirdPart, fourthPart, fifthPart, sixthPart, seventhPart, eighthPart, ninthPart);
-                BigDecimal bd = Output.toBigDecimal();
-
-                String strFormat = String.format("%."+fixedPoint+"f", bd);;
-                String finalFormat = null;
-
-                switch (signBit) {
-                    case "0":
-                        finalFormat = strFormat;
-                        break;
-                    case "1":
-                        finalFormat = "-" + strFormat;
-                        break;
-                }
-
-                outputField.setText(finalFormat);
-
                 String wholeString = signBit + secondPart + thirdPart + fourthPart + fifthPart + sixthPart + seventhPart + eighthPart + ninthPart;
+                Long intBits = Long.parseLong(wholeString, 2);
+                float floatOutput = Float.intBitsToFloat(intBits.intValue());
 
-                if (printBox.isSelected()) {
-                    StringBuilder sb = new StringBuilder(wholeString + " : " + finalFormat);
-                    controller.PrintToText(sb);
+                if (!Double.isFinite(floatOutput)) {
+                    outputField.setText(String.valueOf(floatOutput));
+
+                    if (printBox.isSelected()) {
+                        StringBuilder sb = new StringBuilder(wholeString + " : " + floatOutput);
+                        controller.PrintToText(sb);
+                    }
+                }
+                else {
+                    Decimal32 Output = controller.ComputeBinary(signBit, secondPart, thirdPart, fourthPart, fifthPart, sixthPart, seventhPart, eighthPart, ninthPart);
+                    BigDecimal bd = Output.toBigDecimal();
+
+                    bd = bd.movePointLeft(Integer.parseInt(fixedPoint));
+                    //bd = bd.scaleByPowerOfTen(Integer.parseInt(fixedPoint));
+                    String finalFormat = bd.toString();
+
+                    outputField.setText(finalFormat);
+
+                    if (printBox.isSelected()) {
+                        StringBuilder sb = new StringBuilder(wholeString + " : " + finalFormat);
+                        controller.PrintToText(sb);
+                    }
                 }
             }
         });
@@ -99,26 +103,29 @@ public class BinaryInputForm extends JFrame {
                 String eighthPart = eighthPartField.getText();
                 String ninthPart = ninthPartField.getText();
 
-                Decimal32 Output = controller.ComputeBinary(signBit, secondPart, thirdPart, fourthPart, fifthPart, sixthPart, seventhPart, eighthPart, ninthPart);
-
-                String finalFormat = null;
-
-                switch (signBit) {
-                    case "0":
-                        finalFormat = Output.toString();
-                        break;
-                    case "1":
-                        finalFormat = "-" + Output.toString();
-                        break;
-                }
-
-                outputField.setText(finalFormat);
-
                 String wholeString = signBit + secondPart + thirdPart + fourthPart + fifthPart + sixthPart + seventhPart + eighthPart + ninthPart;
+                Long intBits = Long.parseLong(wholeString, 2);
+                float floatOutput = Float.intBitsToFloat(intBits.intValue());
 
-                if (printBox.isSelected()) {
-                    StringBuilder sb = new StringBuilder(wholeString + " : "  + finalFormat);
-                    controller.PrintToText(sb);
+                if (!Double.isFinite(floatOutput)) {
+                    outputField.setText(String.valueOf(floatOutput));
+
+                    if (printBox.isSelected()) {
+                        StringBuilder sb = new StringBuilder(wholeString + " : " + floatOutput);
+                        controller.PrintToText(sb);
+                    }
+                }
+                else {
+                    Decimal32 Output = controller.ComputeBinary(signBit, secondPart, thirdPart, fourthPart, fifthPart, sixthPart, seventhPart, eighthPart, ninthPart);
+
+                    String finalFormat =  Output.toString();
+
+                    outputField.setText(finalFormat);
+
+                    if (printBox.isSelected()) {
+                        StringBuilder sb = new StringBuilder(wholeString + " : "  + finalFormat);
+                        controller.PrintToText(sb);
+                    }
                 }
             }
         });
